@@ -1,0 +1,39 @@
+import React from 'react';
+import styled from 'styled-components';
+import ImmutablePropTypes from 'react-immutable-proptypes';
+import { infiniteScroller } from 'hocs';
+
+
+const Wrapper = styled.div`
+  overflow: hidden;
+  width: 50%;
+  height: 100%;
+  border-radius: 4px;
+  border: 2px solid #aeaeae;
+  background-color: #dfdfdf;
+`;
+
+class ComponentContentList extends React.Component {
+  componentDidMount() {
+    console.log('I did mount, bitch.'); // eslint-disable-line
+  }
+
+  render() {
+    const { entries } = this.props;
+    return (
+      <Wrapper>
+        <ul>
+          {entries.map((e) => <li key={e}>{e}</li>)}
+        </ul>
+      </Wrapper>
+    );
+  }
+}
+
+ComponentContentList.propTypes = {
+  entries: ImmutablePropTypes.list,
+};
+
+const mapCallback = (ownProps) => ownProps.fetchEntries;
+
+export default infiniteScroller(mapCallback)(ComponentContentList);
