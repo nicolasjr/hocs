@@ -13,7 +13,7 @@ const timeToMount = (BaseComponent) => {
     }
 
     componentDidMount() {
-      console.log(`It took ${new Date() - this.time}ms to render ${this.constructor.displayName} Component`); // eslint-disable-line
+      console.log(`It took ${new Date() - this.time}ms to render ${this.constructor.displayName}`); // eslint-disable-line
       if (BaseClass.prototype.componentDidMount) {
         super.componentDidMount();
       }

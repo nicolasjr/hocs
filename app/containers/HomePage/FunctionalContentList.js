@@ -24,6 +24,6 @@ FunctionalContentList.propTypes = {
   entries: ImmutablePropTypes.list,
 };
 
-const mapCallback = (ownProps) => ownProps.fetchEntries;
+const mapLoaderCallback = (ownProps) => ownProps.fetchEntries;
 
-export default infiniteScroller(mapCallback)(FunctionalContentList);
+export default infiniteScroller(mapLoaderCallback)(FunctionalContentList);
