@@ -1,3 +1,5 @@
+import React, { cloneElement } from 'react';
+import { range } from 'ramda';
 import { getDisplayName, isClass, getBaseClass } from './helpers';
 import infiniteScroller from './infiniteScroller';
 
@@ -9,19 +11,62 @@ const infiniteListDisplay = (mapLoaderCallback, mapListToState) => (BaseComponen
 
       this.handleScroll = this.handleScroll.bind(this);
       this.superRender = this.superRender.bind(this);
+      this.firstVisibleEntry = this.firstVisibleEntry.bind(this);
 
-      this.state = { ...mapListToState(this.props) };
+      this.state = {
+        firstVisibleEntry: 0,
+        ...mapListToState(props),
+      };
     }
 
-    handleScroll({ scrollTop }) {
-      console.log('scroll', scrollTop);
-      console.log(this.state);
+    componentWillReceiveProps(props) {
+      this.setState({
+        ...mapListToState(props),
+      });
+
+      if (BaseComponent.prototype.componentWillReceiveProps) {
+        super.componentWillReceiveProps(props);
+      }
+    }
+
+    firstVisibleEntry(scrollTop) {
+      return Math.floor(scrollTop / this.state.entryHeight);
+    }
+
+    handleScroll({ scrollTop, clientHeight }) {
+      const { firstVisibleEntry, entryHeight } = this.state;
+
+      if (this.firstVisibleEntry(scrollTop) !== firstVisibleEntry) {
+        this.setState({
+          entriesToRender: Math.ceil(clientHeight / entryHeight),
+          firstVisibleEntry: this.firstVisibleEntry(scrollTop),
+        });
+      }
     }
 
     render() {
-      return isClass(BaseComponent)
+      const { firstVisibleEntry, entriesToRender, totalEntries, renderEntry, entryHeight } = this.state;
+      const lastEntryVisible = entriesToRender + firstVisibleEntry > totalEntries
+        ? totalEntries
+        : (entriesToRender || totalEntries) + firstVisibleEntry;
+
+      const topSpacerHeight = firstVisibleEntry * entryHeight;
+      const bottomSpacerHeight = lastEntryVisible
+        ? (totalEntries - lastEntryVisible) * entryHeight
+        : 0;
+
+      const parent = isClass(BaseComponent)
         ? super.render()
         : BaseComponent(this.props);
+
+      return cloneElement(parent, {}, (
+        <ul>
+          <div style={{ height: `${topSpacerHeight}px` }} />
+          {range(firstVisibleEntry, lastEntryVisible)
+            .map((key) => renderEntry({ key, index: key }))}
+          <div style={{ height: `${bottomSpacerHeight}px` }} />
+        </ul>
+      ));
     }
   }
 

@@ -19,6 +19,13 @@ const infiniteScroller = (mapCallback) => (BaseComponent) => {
       this.callback = mapCallback(props);
     }
 
+    componentWillReceiveProps(nextProps) {
+      this.callback = mapCallback(nextProps);
+      if (BaseComponent.prototype.componentWillReceiveProps) {
+        super.componentWillReceiveProps(nextProps);
+      }
+    }
+
     didReachScrollBottom = ({ scrollHeight, scrollTop, clientHeight }) => scrollTop + clientHeight >= scrollHeight
 
     handleScroll({ target }) {

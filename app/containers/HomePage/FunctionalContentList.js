@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import ImmutablePropTypes from 'react-immutable-proptypes';
-import { infiniteScroller } from 'hocs';
+import { infiniteListDisplay } from 'hocs';
 
 const Wrapper = styled.div`
   overflow: hidden;
@@ -12,12 +12,8 @@ const Wrapper = styled.div`
   background-color: #dfdfdf;
 `;
 
-const FunctionalContentList = ({ entries }) => (
-  <Wrapper>
-    <ul>
-      {entries.map((e) => <li key={e}>{e}</li>)}
-    </ul>
-  </Wrapper>
+const FunctionalContentList = () => (
+  <Wrapper />
 );
 
 FunctionalContentList.propTypes = {
@@ -26,4 +22,16 @@ FunctionalContentList.propTypes = {
 
 const mapLoaderCallback = (ownProps) => ownProps.fetchEntries;
 
-export default infiniteScroller(mapLoaderCallback)(FunctionalContentList);
+const mapListToState = (ownProps) => ({
+  totalEntries: ownProps.entries.size,
+  entryHeight: 24,
+  renderEntry({ index, key }) { // eslint-disable-line
+    return (
+      <li key={key}>
+        {ownProps.entries.get(index)}
+      </li>
+    );
+  },
+});
+
+export default infiniteListDisplay(mapLoaderCallback, mapListToState)(FunctionalContentList);
