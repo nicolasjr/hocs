@@ -19,13 +19,17 @@ const infiniteListDisplay = (mapLoaderCallback, mapListToState) => (BaseComponen
       };
     }
 
-    componentWillReceiveProps(props) {
+    componentWillReceiveProps(nextProps) {
+      if (BaseComponent.prototype.shouldComponentUpdate && !super.shouldComponentUpdate(nextProps)) {
+        return;
+      }
+
       this.setState({
-        ...mapListToState(props),
+        ...mapListToState(nextProps),
       });
 
       if (BaseComponent.prototype.componentWillReceiveProps) {
-        super.componentWillReceiveProps(props);
+        super.componentWillReceiveProps(nextProps);
       }
     }
 
