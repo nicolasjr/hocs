@@ -19,11 +19,9 @@ class HomePage extends React.Component {
   constructor(props) {
     super(props);
     this.state = { previousAmountOfEntries: 0 };
-
-    this.handleFetchEntries = this.handleFetchEntries.bind(this);
   }
 
-  handleFetchEntries() {
+  handleFetchEntries = () => {
     const { entries, fetchEntries } = this.props;
     if (entries.size > this.state.previousAmountOfEntries) {
       this.setState({ previousAmountOfEntries: entries.size });
@@ -31,14 +29,12 @@ class HomePage extends React.Component {
     }
   }
 
-  render() {
-    return (
-      <Wrapper>
-        <FunctionalContentList entries={this.props.entries} fetchEntries={this.handleFetchEntries} />
-        <ComponentContentList entries={this.props.entries} fetchEntries={this.handleFetchEntries} />
-      </Wrapper>
-    );
-  }
+  render = () => (
+    <Wrapper>
+      <FunctionalContentList entries={this.props.entries} fetchEntries={this.handleFetchEntries} />
+      <ComponentContentList entries={this.props.entries} fetchEntries={this.handleFetchEntries} />
+    </Wrapper>
+  );
 }
 
 HomePage.propTypes = {
