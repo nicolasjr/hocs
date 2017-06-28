@@ -14,7 +14,6 @@ const infiniteScroller = (mapCallback) => (BaseComponent) => {
       super(props);
 
       this.handleScroll = this.handleScroll.bind(this);
-      this.superRender = this.superRender.bind(this);
 
       this.callback = mapCallback(props);
     }
