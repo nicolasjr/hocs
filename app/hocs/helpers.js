@@ -13,3 +13,12 @@ export function getBaseClass(BaseComponent) {
     ? BaseComponent
     : PureComponent;
 }
+
+export function callSuperMethodIfExists(BaseComponent, methodName, ...params) {
+  if (BaseComponent.prototype[methodName]) {
+    BaseComponent.prototype[methodName].call(...params);
+    return true;
+  }
+
+  return false;
+}

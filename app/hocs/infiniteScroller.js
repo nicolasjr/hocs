@@ -19,15 +19,15 @@ const infiniteScroller = (mapCallback) => (BaseComponent) => {
       this.callback = mapCallback(props);
     }
 
-    componentWillUpdate(nextProps) {
+    componentWillReceiveProps(nextProps) {
       if (BaseComponent.prototype.shouldComponentUpdate && !super.shouldComponentUpdate(nextProps)) {
         return;
       }
 
       this.callback = mapCallback(nextProps);
 
-      if (BaseComponent.prototype.componentWillUpdate) {
-        super.componentWillUpdate(nextProps);
+      if (BaseComponent.prototype.componentWillReceiveProps) {
+        super.componentWillReceiveProps(nextProps);
       }
     }
 

@@ -10,12 +10,9 @@ const infiniteListDisplay = (mapLoaderCallback, mapListToState) => (BaseComponen
       super(props);
 
       this.handleScroll = this.handleScroll.bind(this);
-      this.superRender = this.superRender.bind(this);
-      this.firstVisibleEntry = this.firstVisibleEntry.bind(this);
 
       this.state = {
         firstVisibleEntry: 0,
-        Wrapper: 'ul',
         ...mapListToState(props),
       };
     }
@@ -34,17 +31,16 @@ const infiniteListDisplay = (mapLoaderCallback, mapListToState) => (BaseComponen
       }
     }
 
-    firstVisibleEntry(scrollTop) {
+    getFirstVisibleEntry(scrollTop) {
       return Math.max(Math.floor(scrollTop / this.state.entryHeight) - 1, 0);
     }
 
     handleScroll({ scrollTop, clientHeight }) {
       const { firstVisibleEntry, entryHeight } = this.state;
-
-      if (this.firstVisibleEntry(scrollTop) !== firstVisibleEntry) {
+      if (this.getFirstVisibleEntry(scrollTop) !== firstVisibleEntry) {
         this.setState({
           entriesToRender: Math.ceil(clientHeight / entryHeight) + 1,
-          firstVisibleEntry: this.firstVisibleEntry(scrollTop),
+          firstVisibleEntry: this.getFirstVisibleEntry(scrollTop),
         });
       }
     }
@@ -56,7 +52,6 @@ const infiniteListDisplay = (mapLoaderCallback, mapListToState) => (BaseComponen
         totalEntries,
         renderEntry,
         entryHeight,
-        Wrapper,
       } = this.state;
 
       const lastEntryVisible = entriesToRender + firstVisibleEntry > totalEntries
@@ -73,12 +68,12 @@ const infiniteListDisplay = (mapLoaderCallback, mapListToState) => (BaseComponen
         : BaseComponent(this.props);
 
       return cloneElement(parent, {}, (
-        <Wrapper>
+        <ul>
           <div style={{ height: `${topSpacerHeight}px` }} />
           {range(firstVisibleEntry, lastEntryVisible)
             .map((key) => renderEntry({ key, index: key }))}
           <div style={{ height: `${bottomSpacerHeight}px` }} />
-        </Wrapper>
+        </ul>
       ));
     }
   }
